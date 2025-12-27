@@ -6,13 +6,17 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   const btn = document.getElementById("btnHybrid");
-  const menu = document.getElementById("submenu");
+  const submenu = document.getElementById("submenu");
 
   btn.addEventListener("click", function () {
-    menu.style.display =
-      menu.style.display === "block" ? "none" : "block";
+    if (submenu.style.display === "block") {
+      submenu.style.display = "none";
+    } else {
+      submenu.style.display = "block";
+    }
   });
 });
 </script>
+
 </body>
 </html>

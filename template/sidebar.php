@@ -1,6 +1,11 @@
 <?php
 // Mendapatkan nama file yang sedang dibuka (misal: kriteria.php)
 $current_page = basename($_SERVER['PHP_SELF']);
+
+$isAHP = in_array($current_page, [
+  'perbandingan.php',
+  'hitung.php'
+]);
 ?>
 
 <nav id="sidebar">
