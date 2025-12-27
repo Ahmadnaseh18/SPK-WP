@@ -15,9 +15,8 @@ if(isset($_POST['update'])){
     $id = $_POST['id_kriteria'];
     $kode = mysqli_real_escape_string($koneksi, $_POST['kode']);
     $nama = mysqli_real_escape_string($koneksi, $_POST['nama']);
-    $bobot = $_POST['bobot'];
     $label = $_POST['label'];
-    mysqli_query($koneksi, "UPDATE kriteria SET kode_kriteria='$kode', nama_kriteria='$nama', bobot='$bobot', sifat='$label' WHERE id_kriteria='$id'");
+    mysqli_query($koneksi, "UPDATE kriteria SET kode_kriteria='$kode', nama_kriteria='$nama', sifat='$label' WHERE id_kriteria='$id'");
     echo "<script>location='kriteria.php';</script>";
 }
 
@@ -25,9 +24,8 @@ if(isset($_POST['update'])){
 if(isset($_POST['simpan'])){
     $kode = mysqli_real_escape_string($koneksi, $_POST['kode']);
     $nama = mysqli_real_escape_string($koneksi, $_POST['nama']);
-    $bobot = $_POST['bobot'];
     $label = $_POST['label'];
-    mysqli_query($koneksi,"INSERT INTO kriteria VALUES(NULL, '$kode', '$nama', '$bobot', '$label')");
+    mysqli_query($koneksi,"INSERT INTO kriteria VALUES(NULL, '$kode', '$nama', 0, '$label')");
     echo "<script>alert('Data berhasil disimpan'); window.location='kriteria.php';</script>";
 }
 ?>
@@ -53,11 +51,8 @@ if(isset($_POST['simpan'])){
                         <option value="cost">Cost</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <input type="number" step="0.01" name="bobot" class="form-control" placeholder="Bobot" required>
-                </div>
                 <div class="col-md-1">
-                    <button type="submit" name="simpan" class="btn btn-primary w-100">Simpan</button>
+                    <button type="submit" name="simpan" class="btn btn-primary w-110">Simpan</button>
                 </div>
             </form>
         </div>
@@ -119,10 +114,6 @@ if(isset($_POST['simpan'])){
                                                     <option value="benefit" <?= $d['sifat'] == 'benefit' ? 'selected' : '' ?>>Benefit</option>
                                                     <option value="cost" <?= $d['sifat'] == 'cost' ? 'selected' : '' ?>>Cost</option>
                                                 </select>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Bobot</label>
-                                                <input type="number" step="0.01" name="bobot" class="form-control" value="<?= $d['bobot'] ?>" required>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
