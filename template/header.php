@@ -113,14 +113,20 @@ if (!isset($_SESSION['login'])) {
         }
 
         .submenu {
-            display: none;
-            list-style: none;
-            padding-left: 20px;
-        }
-
-        .menu-item>a {
-            cursor: pointer;
-        }
+    background: rgba(255, 255, 255, 0.1);
+    margin-top: 5px;
+    border-radius: 5px;
+}
+.submenu li a {
+    font-size: 0.9em;
+    padding: 8px 15px !important;
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+.submenu li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
     </style>
 </head>
 
