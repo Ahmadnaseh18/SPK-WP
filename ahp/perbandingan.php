@@ -3,7 +3,7 @@ include '../template/header.php';
 include '../template/sidebar.php';
 include '../config/koneksi.php';
 
-// ambil kriteria
+// Ambil data kriteria dari database
 $q = mysqli_query($koneksi, "SELECT * FROM kriteria");
 $kriteria = [];
 while ($row = mysqli_fetch_assoc($q)) {
@@ -16,10 +16,8 @@ while ($row = mysqli_fetch_assoc($q)) {
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0">Perbandingan Kriteria (AHP)</h5>
         </div>
-
         <div class="card-body">
             <form action="simpan_perbandingan.php" method="post">
-
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover align-middle">
                         <thead class="table-light text-center">
@@ -31,14 +29,15 @@ while ($row = mysqli_fetch_assoc($q)) {
                         </thead>
                         <tbody>
                             <?php
-                            for ($i = 0; $i < count($kriteria); $i++) {
-                                for ($j = $i + 1; $j < count($kriteria); $j++) {
+                            $n = count($kriteria);
+                            for ($i = 0; $i < $n; $i++) {
+                                for ($j = $i + 1; $j < $n; $j++) {
                             ?>
                                     <tr>
                                         <td><?= $kriteria[$i]['nama_kriteria']; ?></td>
                                         <td class="text-center">
                                             <select 
-                                                name="nilai[<?= $kriteria[$i]['id']; ?>][<?= $kriteria[$j]['id']; ?>]" 
+                                                name="nilai[<?= $kriteria[$i]['id_kriteria']; ?>][<?= $kriteria[$j]['id_kriteria']; ?>]" 
                                                 class="form-select text-center" 
                                                 required
                                             >
@@ -59,16 +58,14 @@ while ($row = mysqli_fetch_assoc($q)) {
                         </tbody>
                     </table>
                 </div>
-
                 <div class="text-end mt-3">
                     <button type="submit" class="btn btn-success px-4">
                         💾 Simpan Perbandingan
                     </button>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
 
-<? include '../template/footer.php'; ?>
+<?php include '../template/footer.php'; ?>
