@@ -4,39 +4,56 @@ include '../config/koneksi.php';
 /* =========================
    1. AMBIL DATA KRITERIA
 ========================= */
-$q = mysqli_query($koneksi, "SELECT * FROM kriteria");
 $kriteria = [];
+$q = mysqli_query($koneksi, "SELECT * FROM kriteria ORDER BY id_kriteria ASC");
 while ($row = mysqli_fetch_assoc($q)) {
     $kriteria[] = $row;
 }
 $n = count($kriteria);
 
+if ($n < 2) {
+    die("Minimal harus ada 2 kriteria");
+}
+
 /* =========================
-   3.1 BENTUK MATRIKS AHP
+   2. BENTUK MATRIKS AHP
 ========================= */
 $matriks = [];
 
 for ($i = 0; $i < $n; $i++) {
     for ($j = 0; $j < $n; $j++) {
+
         if ($i == $j) {
             $matriks[$i][$j] = 1;
         } else {
             $id1 = $kriteria[$i]['id_kriteria'];
             $id2 = $kriteria[$j]['id_kriteria'];
 
-            $q = mysqli_query(
-                $koneksi,
+            // Cek langsung
+            $q1 = mysqli_query($koneksi,
                 "SELECT nilai FROM ahp_perbandingan 
-         WHERE kriteria_1='$id1' AND kriteria_2='$id2'"
+                 WHERE kriteria_1='$id1' AND kriteria_2='$id2'"
             );
-            $d = mysqli_fetch_assoc($q);
-            $matriks[$i][$j] = $d['nilai'] ?? 1;
+            $d1 = mysqli_fetch_assoc($q1);
+
+            if ($d1) {
+                $matriks[$i][$j] = $d1['nilai'];
+            } else {
+                // Cek kebalikannya
+                $q2 = mysqli_query($koneksi,
+                    "SELECT nilai FROM ahp_perbandingan 
+                     WHERE kriteria_1='$id2' AND kriteria_2='$id1'"
+                );
+                $d2 = mysqli_fetch_assoc($q2);
+
+                $matriks[$i][$j] = $d2 ? (1 / $d2['nilai']) : 1;
+            }
         }
     }
 }
 
 /* =========================
-   3.2 NORMALISASI
+   3. NORMALISASI MATRIKS
 ========================= */
 $normal = [];
 $jumlahKolom = [];
@@ -55,7 +72,7 @@ for ($i = 0; $i < $n; $i++) {
 }
 
 /* =========================
-   3.3 HITUNG BOBOT
+   4. HITUNG BOBOT AHP
 ========================= */
 $bobot = [];
 
@@ -64,35 +81,21 @@ for ($i = 0; $i < $n; $i++) {
 }
 
 /* =========================
-   4. HITUNG CR
+   5. SIMPAN BOBOT KE DB
+   (TANPA CEK CR)
 ========================= */
-$lambdaMax = 0;
 for ($i = 0; $i < $n; $i++) {
-    $total = 0;
-    for ($j = 0; $j < $n; $j++) {
-        $total += $matriks[$i][$j] * $bobot[$j];
-    }
-    $lambdaMax += $total / $bobot[$i];
-}
-$lambdaMax /= $n;
+    $id = $kriteria[$i]['id_kriteria'];
+    $b  = round($bobot[$i], 6);
 
-$CI = ($lambdaMax - $n) / ($n - 1);
-$RI = [0, 0, 0.58, 0.9, 1.12, 1.24, 1.32, 1.41];
-$CR = $CI / $RI[$n];
+    mysqli_query(
+        $koneksi,
+        "UPDATE kriteria SET bobot='$b' WHERE id_kriteria='$id'"
+    );
+}
 
 /* =========================
-   5. SIMPAN BOBOT
+   6. REDIRECT
 ========================= */
-if ($CR <= 0.1) {
-    for ($i = 0; $i < $n; $i++) {
-        $id = $kriteria[$i]['id_kriteria'];
-        $b = $bobot[$i];
-        mysqli_query(
-            $koneksi,
-            "UPDATE kriteria SET bobot='$b' WHERE id_kriteria='$id'"
-        );
-    }
-    header("Location: hitung.php?status=success");
-} else {
-    header("Location: hitung.php?status=gagal");
-}
+header("Location: hitung.php?status=success");
+exit;
