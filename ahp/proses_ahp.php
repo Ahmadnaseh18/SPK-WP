@@ -1,7 +1,4 @@
 <?php
-include '../template/footer.php';
-include '../template/header.php';
-include '../template/sidebar.php';
 include '../config/koneksi.php';
 
 /* =========================
@@ -24,11 +21,11 @@ for ($i = 0; $i < $n; $i++) {
         if ($i == $j) {
             $matriks[$i][$j] = 1;
         } else {
-            $id1 = $kriteria[$i]['id'];
-            $id2 = $kriteria[$j]['id'];
+            $id1 = $kriteria[$i]['id_kriteria'];
+            $id2 = $kriteria[$j]['id_kriteria'];
 
             $q = mysqli_query(
-                $conn,
+                $koneksi,
                 "SELECT nilai FROM ahp_perbandingan 
          WHERE kriteria_1='$id1' AND kriteria_2='$id2'"
             );
@@ -88,11 +85,11 @@ $CR = $CI / $RI[$n];
 ========================= */
 if ($CR <= 0.1) {
     for ($i = 0; $i < $n; $i++) {
-        $id = $kriteria[$i]['id'];
+        $id = $kriteria[$i]['id_kriteria'];
         $b = $bobot[$i];
         mysqli_query(
-            $conn,
-            "UPDATE kriteria SET bobot='$b' WHERE id='$id'"
+            $koneksi,
+            "UPDATE kriteria SET bobot='$b' WHERE id_kriteria='$id'"
         );
     }
     header("Location: hitung.php?status=success");
