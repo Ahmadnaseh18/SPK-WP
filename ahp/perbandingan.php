@@ -1,5 +1,4 @@
 <?php
-include '../template/footer.php';
 include '../template/header.php';
 include '../template/sidebar.php';
 include '../config/koneksi.php';
@@ -12,38 +11,64 @@ while ($row = mysqli_fetch_assoc($q)) {
 }
 ?>
 
-<h3>Perbandingan Kriteria (AHP)</h3>
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Perbandingan Kriteria (AHP)</h5>
+        </div>
 
-<form action="simpan_perbandingan.php" method="post">
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>Kriteria 1</th>
-            <th>Nilai</th>
-            <th>Kriteria 2</th>
-        </tr>
+        <div class="card-body">
+            <form action="simpan_perbandingan.php" method="post">
 
-        <?php
-        for ($i = 0; $i < count($kriteria); $i++) {
-            for ($j = $i + 1; $j < count($kriteria); $j++) {
-        ?>
-                <tr>
-                    <td><?= $kriteria[$i]['nama_kriteria']; ?></td>
-                    <td>
-                        <select name="nilai[<?= $kriteria[$i]['id']; ?>][<?= $kriteria[$j]['id']; ?>]" required>
-                            <option value="">-- Pilih --</option>
-                            <option value="1">1 - Sama penting</option>
-                            <option value="3">3 - Sedikit lebih penting</option>
-                            <option value="5">5 - Lebih penting</option>
-                            <option value="7">7 - Sangat penting</option>
-                            <option value="9">9 - Mutlak lebih penting</option>
-                        </select>
-                    </td>
-                    <td><?= $kriteria[$j]['nama_kriteria']; ?></td>
-                </tr>
-        <?php }
-        } ?>
-    </table>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th width="35%">Kriteria 1</th>
+                                <th width="30%">Nilai Perbandingan</th>
+                                <th width="35%">Kriteria 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            for ($i = 0; $i < count($kriteria); $i++) {
+                                for ($j = $i + 1; $j < count($kriteria); $j++) {
+                            ?>
+                                    <tr>
+                                        <td><?= $kriteria[$i]['nama_kriteria']; ?></td>
+                                        <td class="text-center">
+                                            <select 
+                                                name="nilai[<?= $kriteria[$i]['id']; ?>][<?= $kriteria[$j]['id']; ?>]" 
+                                                class="form-select text-center" 
+                                                required
+                                            >
+                                                <option value="">-- Pilih --</option>
+                                                <option value="1">1 - Sama penting</option>
+                                                <option value="3">3 - Sedikit lebih penting</option>
+                                                <option value="5">5 - Lebih penting</option>
+                                                <option value="7">7 - Sangat penting</option>
+                                                <option value="9">9 - Mutlak lebih penting</option>
+                                            </select>
+                                        </td>
+                                        <td><?= $kriteria[$j]['nama_kriteria']; ?></td>
+                                    </tr>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
 
-    <br>
-    <button type="submit">Simpan Perbandingan</button>
-</form>
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-success px-4">
+                        💾 Simpan Perbandingan
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<? include '../template/footer.php'; ?>
