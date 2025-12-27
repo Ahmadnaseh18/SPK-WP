@@ -1,31 +1,25 @@
 <?php
 session_start();
-if(!isset($_SESSION['login'])){
-header("location:auth/login.php");
+if (!isset($_SESSION['login'])) {
+    header("location: auth/login.php");
+    exit;
 }
 include 'template/header.php';
-include 'config/koneksi.php';
+include 'template/sidebar.php';
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-<title>Dashboard SPK WP</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container">
-<h2>Sistem Pendukung Keputusan</h2>
-<p>Seleksi Calon Karyawan - Metode Weighted Product</p>
 
-
-<ul class="menu">
-<li><a href="pages/kriteria.php">Data Kriteria</a></li>
-<li><a href="pages/alternatif.php">Data Alternatif</a></li>
-<li><a href="pages/keputusan.php">Pencarian Keputusan</a></li>
-<li><a href="pages/riwayat.php">Riwayat Keputusan</a></li>
-<li><a href="auth/logout.php">Logout</a></li>
-</ul>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0 p-4">
+                <h2 class="fw-bold">Selamat Datang, <?= $_SESSION['username']; ?>!</h2>
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Silakan gunakan menu di samping untuk mengelola data kriteria, alternatif, dan melihat hasil keputusan.
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</body>
-</html>
+
 <?php include 'template/footer.php'; ?>
